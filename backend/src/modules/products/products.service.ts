@@ -319,7 +319,7 @@ export class ProductsService {
     const brandName = brand || this.matcher.extractBrand(productName);
     
     // Get candidates from same brand/category for matching
-    const candidates = await this.db.sql`
+    const candidates: any[] = await this.db.sql`
       SELECT p.id, p.name_en as "nameEn", p.name_ar as "nameAr", p.normalized_tokens
       FROM products p
       LEFT JOIN brands b ON b.id = p.brand_id
