@@ -1,0 +1,95 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: qaren_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: qaren
+      POSTGRES_USER: ${DB_USER:-qaren}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-qarenpassword}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qaren"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: qaren_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: qaren_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-qaren}:${DB_PASSWORD:-qarenpassword}@postgres:5432/qaren
+      REDIS_URL: redis://redis:6379
+      PORT: 3001
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      AMAZON_AFFILIATE_TAG: ${AMAZON_AFFILIATE_TAG:-}
+      NOON_AFFILIATE_ID: ${NOON_AFFILIATE_ID:-}
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/logs:/app/logs
+
+  scraper:
+    build:
+      context: ./scrapers
+      dockerfile: Dockerfile
+    container_name: qaren_scraper
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-qaren}:${DB_PASSWORD:-qarenpassword}@postgres:5432/qaren
+      REDIS_URL: redis://redis:6379
+      SCRAPE_INTERVAL_HOURS: 4
+    volumes:
+      - ./scrapers/logs:/app/logs
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: qaren_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:3001
+      NEXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:3000}
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+.next/
+dist/
+build/
+out/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Runtime
+.DS_Store
+*.pem
+.idea/
+.vscode/
+
+# Testing
+coverage/
+
+# Docker volumes (local)
+postgres_data/
+redis_data/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Misc
+*.tsbuildinfo
+.vercel
