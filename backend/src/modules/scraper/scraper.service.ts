@@ -6,7 +6,7 @@ import { ProductsService } from '../products/products.service';
 import { NoonScraper } from './scrapers/noon.scraper';
 import { AmazonScraper } from './scrapers/amazon.scraper';
 import { JarirScraper } from './scrapers/jarir.scraper';
-import { ExtraScraper } from './scrapers/extra.scraper';
+import { ExtraScraper } from './scrapers/jarir.scraper';
 
 interface ScrapeJob {
   storeSlug: string;

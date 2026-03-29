@@ -13,6 +13,7 @@ import { ProductsController } from './modules/products/products.controller';
 import { NoonScraper } from './modules/scraper/scrapers/noon.scraper';
 import { AmazonScraper } from './modules/scraper/scrapers/amazon.scraper';
 import { JarirScraper, ExtraScraper } from './modules/scraper/scrapers/jarir.scraper';
+import { ExtraScraper as ExtraScraperNew } from './modules/scraper/scrapers/extra.scraper';
 import { ScraperService } from './modules/scraper/scraper.service';
 import { ScraperController } from './modules/scraper/scraper.controller';
 
