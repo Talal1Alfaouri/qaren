@@ -1,4 +1,4 @@
-﻿{
+{
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true, "types": ["node"],
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false
