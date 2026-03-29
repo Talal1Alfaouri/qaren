@@ -1,26 +1,24 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+﻿import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import postgres from 'postgres';
+import * as postgres from 'postgres';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(DatabaseService.name);
-  public sql: postgres.Sql;
+  public sql: any;
 
   constructor(private config: ConfigService) {}
 
   async onModuleInit() {
     const connectionString = this.config.get<string>('DATABASE_URL');
-    this.sql = postgres(connectionString, {
+    const pg = (postgres as any).default || postgres;
+    this.sql = pg(connectionString, {
       max: 20,
       idle_timeout: 30,
       connect_timeout: 10,
-      
     });
-    
-    // Test connection
     try {
-      await this.sql`SELECT 1`;
+      await this.sql\SELECT 1\;
       this.logger.log('✅ Database connected');
     } catch (err) {
       this.logger.error('❌ Database connection failed', err);
