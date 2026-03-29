@@ -121,7 +121,7 @@ export class AlertsService {
 }
 
 function buildAlertEmailHtml(alert: any): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://qaren.sa';
+  const siteUrl = 'https://qaren.sa';
   const savings = alert.targetPrice - alert.currentPrice;
   return `
     <!DOCTYPE html>
