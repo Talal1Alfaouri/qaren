@@ -67,13 +67,13 @@ export class AffiliateService {
   // Tracking redirect URL - allows future monetization
   buildTrackingUrl(storeSlug: string, originalUrl: string): string {
     const siteUrl = this.config.get('NEXT_PUBLIC_SITE_URL', 'https://qaren.sa');
-    const encoded = Buffer.from(originalUrl).toString('base64url');
+    const encoded = btoa(originalUrl);
     return `${siteUrl}/go/${storeSlug}?u=${encoded}`;
   }
 
   decodeTrackingUrl(encoded: string): string {
     try {
-      return Buffer.from(encoded, 'base64url').toString('utf-8');
+      return atob(encoded);
     } catch {
       return '';
     }

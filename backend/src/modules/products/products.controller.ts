@@ -4,7 +4,7 @@ import {
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { ProductsService, SearchParams } from './products.service';
-import { createHash } from 'crypto';
+
 
 @ApiTags('Products')
 @Controller('products')
@@ -67,7 +67,7 @@ export class ProductsController {
     @Req() req: Request,
   ) {
     const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.ip || '';
-    const ipHash = createHash('sha256').update(ip).digest('hex');
+    const ipHash = ip.split("").reduce((a:any,b:any)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0).toString(16);
 
     await this.products.trackClick(offerId, {
       sessionId: req.headers['x-session-id'] as string,
