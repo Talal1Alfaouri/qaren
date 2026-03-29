@@ -15,7 +15,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       max: 20,
       idle_timeout: 30,
       connect_timeout: 10,
-      transform: postgres.camel,
+      
     });
     
     // Test connection
